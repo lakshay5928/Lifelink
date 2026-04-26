@@ -178,6 +178,8 @@ MIT — Free to use for educational purposes.
 
 ---
 
-## ⭐ Author
+## 👥 Team Course Care
 
-Lakshay Verma
+- Lakshay Verma (Team Lead)  
+- Piyush  
+- Rudra Pratap Singh 
