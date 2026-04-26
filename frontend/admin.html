@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Panel — LifeLink</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  /* ── Admin Layout ── */
+  .admin-wrap { display:flex; min-height:100vh; padding-top:70px; }
+
+  /* Sidebar */
+  .admin-sidebar {
+    width:230px; flex-shrink:0; background:#0f0f13;
+    border-right:1px solid rgba(255,255,255,.07);
+    padding:24px 0; position:sticky; top:70px; height:calc(100vh - 70px);
+    overflow-y:auto;
+  }
+  .admin-sidebar h2 {
+    font-size:.65rem; font-weight:700; letter-spacing:.12em;
+    text-transform:uppercase; color:rgba(255,255,255,.3);
+    padding:0 20px 10px; margin-bottom:4px;
+  }
+  .sidebar-btn {
+    display:flex; align-items:center; gap:10px;
+    width:100%; padding:11px 20px; background:none; border:none;
+    color:rgba(255,255,255,.6); font-size:.88rem; cursor:pointer;
+    transition:.15s; text-align:left; border-left:3px solid transparent;
+  }
+  .sidebar-btn:hover { background:rgba(255,255,255,.05); color:#fff; }
+  .sidebar-btn.active {
+    color:#fff; background:rgba(220,38,38,.12);
+    border-left-color:#dc2626;
+  }
+  .sidebar-icon { font-size:1.1rem; width:20px; text-align:center; }
+
+  /* Main content */
+  .admin-main { flex:1; padding:28px 32px; max-width:1100px; }
+
+  /* Page title */
+  .admin-page-title {
+    font-size:1.4rem; font-weight:700; color:#fff;
+    margin-bottom:6px;
+  }
+  .admin-page-sub { font-size:.82rem; color:rgba(255,255,255,.4); margin-bottom:24px; }
+
+  /* Stats cards */
+  .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:28px; }
+  .stat-card {
+    background:#13131a; border:1px solid rgba(255,255,255,.07);
+    border-radius:12px; padding:18px 20px;
+  }
+  .stat-card .sv { font-size:2rem; font-weight:800; color:#fff; }
+  .stat-card .sl { font-size:.75rem; color:rgba(255,255,255,.4); margin-top:2px; }
+  .stat-card.red .sv { color:#ef4444; }
+  .stat-card.green .sv { color:#22c55e; }
+  .stat-card.blue  .sv { color:#3b82f6; }
+
+  /* Table */
+  .table-card {
+    background:#13131a; border:1px solid rgba(255,255,255,.07);
+    border-radius:14px; overflow:hidden;
+  }
+  .table-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:1px solid rgba(255,255,255,.07);
+    flex-wrap:wrap; gap:12px;
+  }
+  .table-header h3 { font-size:.95rem; color:#fff; font-weight:600; }
+  .table-search {
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+    border-radius:8px; padding:8px 14px; color:#fff; font-size:.82rem;
+    outline:none; width:220px;
+  }
+  .table-search::placeholder { color:rgba(255,255,255,.3); }
+  .table-search:focus { border-color:rgba(220,38,38,.4); }
+
+  table { width:100%; border-collapse:collapse; }
+  thead th {
+    text-align:left; padding:10px 14px;
+    font-size:.7rem; letter-spacing:.08em; text-transform:uppercase;
+    color:rgba(255,255,255,.35); border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  tbody tr { border-bottom:1px solid rgba(255,255,255,.04); transition:.15s; }
+  tbody tr:hover { background:rgba(255,255,255,.03); }
+  tbody tr:last-child { border-bottom:none; }
+  td { padding:12px 14px; font-size:.82rem; color:rgba(255,255,255,.75); vertical-align:middle; }
+
+  .td-name { font-weight:600; color:#fff; }
+  .td-email { color:rgba(255,255,255,.45); font-size:.78rem; }
+  .blood-tag {
+    display:inline-block; padding:3px 9px; border-radius:50px;
+    background:rgba(220,38,38,.15); color:#ef4444;
+    font-size:.73rem; font-weight:700;
+  }
+  .avail-dot {
+    width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:5px;
+    vertical-align:middle;
+  }
+  .avail-dot.yes { background:#22c55e; }
+  .avail-dot.no  { background:#ef4444; }
+
+  /* Action buttons in table */
+  .action-btns { display:flex; gap:6px; }
+  .btn-edit, .btn-del {
+    padding:5px 11px; border-radius:7px; border:none; cursor:pointer;
+    font-size:.75rem; font-weight:600; transition:.15s;
+  }
+  .btn-edit { background:rgba(59,130,246,.15); color:#60a5fa; }
+  .btn-edit:hover { background:rgba(59,130,246,.3); }
+  .btn-del  { background:rgba(220,38,38,.12); color:#f87171; }
+  .btn-del:hover  { background:rgba(220,38,38,.28); }
+  .btn-add {
+    display:inline-flex; align-items:center; gap:6px;
+    background:#dc2626; color:#fff; border:none; border-radius:8px;
+    padding:9px 16px; font-size:.82rem; font-weight:600; cursor:pointer; transition:.15s;
+  }
+  .btn-add:hover { background:#b91c1c; }
+
+  /* Modal */
+  .modal-overlay { display:none; position:fixed; inset:0; z-index:2000;
+    background:rgba(0,0,0,.7); backdrop-filter:blur(6px);
+    align-items:center; justify-content:center; padding:16px; }
+  .modal-overlay.open { display:flex; }
+  .modal-box {
+    background:#18181f; border:1px solid rgba(255,255,255,.1);
+    border-radius:16px; padding:28px; width:100%; max-width:560px;
+    max-height:90vh; overflow-y:auto;
+  }
+  .modal-box h3 { font-size:1.05rem; color:#fff; margin-bottom:20px; }
+  .fg { margin-bottom:14px; }
+  .fg label { display:block; font-size:.75rem; color:rgba(255,255,255,.5);
+    font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; }
+  .fg input, .fg select {
+    width:100%; padding:10px 13px; border-radius:9px;
+    border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.05);
+    color:#fff; font-size:.85rem; outline:none; box-sizing:border-box;
+  }
+  .fg input:focus, .fg select:focus { border-color:rgba(220,38,38,.5); }
+  .fg input::placeholder { color:rgba(255,255,255,.25); }
+  .fg select option { background:#18181f; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .modal-footer { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+  .btn-cancel {
+    padding:9px 18px; background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1); border-radius:8px;
+    color:rgba(255,255,255,.6); cursor:pointer; font-size:.83rem;
+  }
+  .btn-cancel:hover { background:rgba(255,255,255,.1); }
+  .btn-save {
+    padding:9px 20px; background:#dc2626; border:none; border-radius:8px;
+    color:#fff; font-weight:600; cursor:pointer; font-size:.83rem;
+  }
+  .btn-save:hover { background:#b91c1c; }
+  .btn-save:disabled { opacity:.5; cursor:not-allowed; }
+
+  /* Confirm delete dialog */
+  .confirm-box { text-align:center; padding:10px 0; }
+  .confirm-box .ci { font-size:3rem; margin-bottom:12px; }
+  .confirm-box h3 { font-size:1.1rem; color:#fff; margin-bottom:8px; }
+  .confirm-box p  { font-size:.85rem; color:rgba(255,255,255,.5); margin-bottom:24px; }
+  .confirm-btns { display:flex; gap:10px; justify-content:center; }
+  .btn-confirm-del {
+    padding:10px 22px; background:#dc2626; border:none; border-radius:8px;
+    color:#fff; font-weight:700; cursor:pointer;
+  }
+
+  /* Blood group stats bar */
+  .blood-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:28px; }
+  .blood-item {
+    background:#13131a; border:1px solid rgba(255,255,255,.07);
+    border-radius:10px; padding:14px; text-align:center;
+  }
+  .blood-item .bg-tag { font-size:1.1rem; font-weight:800; color:#ef4444; }
+  .blood-item .bg-count { font-size:.8rem; color:rgba(255,255,255,.4); margin-top:3px; }
+
+  /* Empty state */
+  .empty-state { text-align:center; padding:48px 20px; color:rgba(255,255,255,.3); }
+  .empty-state .ei { font-size:2.5rem; margin-bottom:12px; }
+
+  /* Pagination */
+  .pagination { display:flex; gap:6px; justify-content:flex-end; padding:14px 20px; border-top:1px solid rgba(255,255,255,.06); }
+  .page-btn {
+    padding:5px 11px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.09);
+    border-radius:6px; color:rgba(255,255,255,.6); font-size:.78rem; cursor:pointer;
+  }
+  .page-btn.active { background:rgba(220,38,38,.2); border-color:rgba(220,38,38,.4); color:#ef4444; }
+  .page-btn:hover:not(.active) { background:rgba(255,255,255,.1); }
+
+  /* Section hidden by default */
+  .admin-section { display:none; }
+  .admin-section.active { display:block; }
+
+  /* Admin badge in nav */
+  .admin-nav-link { color:#ef4444 !important; font-weight:600 !important; }
+
+  /* Responsive */
+  @media(max-width:700px){
+    .admin-sidebar { display:none; }
+    .admin-main { padding:16px; }
+    .form-row { grid-template-columns:1fr; }
+    table { font-size:.75rem; }
+    td, th { padding:9px 8px; }
+  }
+</style>
+</head>
+<body>
+<div id="apiBar" class="api-bar">🔄 Connecting to server...</div>
+<div id="toast"></div>
+
+<nav>
+  <div class="nav-logo"><div class="pulse"></div>LifeLink</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="search.html">Find Donors</a>
+    <a href="emergency.html">Emergency</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="admin.html" class="active admin-nav-link">⚙️ Admin</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" data-modal="login">Login</button>
+    <a href="register.html" class="btn btn-red btn-sm">+ Register</a>
+    <button class="btn btn-sm" data-action="logout" style="display:none;background:var(--red-light);color:var(--red);border-radius:50px;border:none">Logout</button>
+  </div>
+  <button class="ham"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob-menu">
+  <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+  <a href="emergency.html">Emergency</a><a href="dashboard.html">Dashboard</a>
+  <a href="admin.html">⚙️ Admin Panel</a>
+</div>
+
+<!-- AUTH MODAL (needed by app.js) -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-pane="loginPane">Login</button>
+    </div>
+    <div id="loginPane" class="modal-pane">
+      <form id="loginForm">
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+        <button type="submit" class="btn-submit">Log In</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="admin-wrap">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <h2>Admin</h2>
+    <button class="sidebar-btn active" data-sec="overview">
+      <span class="sidebar-icon">📊</span> Overview
+    </button>
+    <button class="sidebar-btn" data-sec="donors">
+      <span class="sidebar-icon">🩸</span> Manage Donors
+    </button>
+    <h2 style="margin-top:18px">Quick Links</h2>
+    <button class="sidebar-btn" onclick="window.location.href='index.html'">
+      <span class="sidebar-icon">🏠</span> Home
+    </button>
+    <button class="sidebar-btn" onclick="window.location.href='dashboard.html'">
+      <span class="sidebar-icon">👤</span> My Profile
+    </button>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+    <!-- Access denied message (shown before auth check) -->
+    <div id="accessDenied" style="display:none;text-align:center;padding:80px 20px;">
+      <div style="font-size:3rem;margin-bottom:16px">🔒</div>
+      <h2 style="color:#fff;margin-bottom:8px">Admin Access Only</h2>
+      <p style="color:rgba(255,255,255,.45);margin-bottom:20px">You don't have permission to view this page.</p>
+      <a href="index.html" class="btn btn-red">Go Home</a>
+    </div>
+
+    <!-- Admin content (shown after auth check) -->
+    <div id="adminContent" style="display:none">
+
+      <!-- OVERVIEW SECTION -->
+      <section id="sec-overview" class="admin-section active">
+        <div class="admin-page-title">📊 Overview</div>
+        <div class="admin-page-sub">Welcome back, Admin. Here's what's happening.</div>
+
+        <div class="stats-row">
+          <div class="stat-card red"><div class="sv" id="st-total">—</div><div class="sl">Total Donors</div></div>
+          <div class="stat-card green"><div class="sv" id="st-avail">—</div><div class="sl">Available</div></div>
+          <div class="stat-card"><div class="sv" id="st-unavail">—</div><div class="sl">Unavailable</div></div>
+        </div>
+
+        <div class="admin-page-title" style="font-size:1rem;margin-bottom:12px">Blood Group Distribution</div>
+        <div class="blood-stats" id="bloodStats">
+          <div class="blood-item"><div class="bg-tag">—</div><div class="bg-count">Loading…</div></div>
+        </div>
+
+        <div class="admin-page-title" style="font-size:1rem;margin-bottom:12px">Top States</div>
+        <div class="table-card">
+          <table>
+            <thead><tr><th>State</th><th>Donors</th></tr></thead>
+            <tbody id="stateStatsBody"><tr><td colspan="2" style="text-align:center;padding:20px;color:rgba(255,255,255,.3)">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- DONORS SECTION -->
+      <section id="sec-donors" class="admin-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px">
+          <div class="admin-page-title">🩸 Manage Donors</div>
+          <button class="btn-add" id="addDonorBtn">＋ Add Donor</button>
+        </div>
+        <div class="admin-page-sub" id="donorMeta">Loading donors…</div>
+
+        <div class="table-card">
+          <div class="table-header">
+            <h3>All Donors</h3>
+            <input class="table-search" id="donorSearch" placeholder="Search name, email, city…">
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Blood</th>
+                  <th>Location</th>
+                  <th>Contact</th>
+                  <th>Available</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="donorTableBody">
+                <tr><td colspan="6" style="text-align:center;padding:30px;color:rgba(255,255,255,.3)">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </section>
+
+    </div><!-- /adminContent -->
+  </main>
+</div>
+
+<!-- ── Add / Edit Donor Modal ── -->
+<div class="modal-overlay" id="donorModal">
+  <div class="modal-box">
+    <h3 id="donorModalTitle">Add New Donor</h3>
+    <input type="hidden" id="editId">
+    <div class="form-row">
+      <div class="fg"><label>Full Name</label><input type="text" id="mName" placeholder="Arjun Sharma"></div>
+      <div class="fg"><label>Age</label><input type="number" id="mAge" placeholder="25" min="18" max="65"></div>
+    </div>
+    <div class="form-row">
+      <div class="fg">
+        <label>Gender</label>
+        <select id="mGender">
+          <option value="">Select</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Blood Group</label>
+        <select id="mBlood">
+          <option value="">Select</option>
+          <option>A+</option><option>A-</option>
+          <option>B+</option><option>B-</option>
+          <option>O+</option><option>O-</option>
+          <option>AB+</option><option>AB-</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="fg">
+        <label>State</label>
+        <select id="mState" class="state-sel" data-city-target="mCity">
+          <option value="">Select State</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>City</label>
+        <select id="mCity"><option value="">Select City</option></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="fg"><label>Contact (10 digits)</label><input type="text" id="mContact" placeholder="98xxxxxxxx"></div>
+      <div class="fg"><label>Last Donation Date</label><input type="date" id="mLastDon"></div>
+    </div>
+    <div class="fg"><label>Email</label><input type="email" id="mEmail" placeholder="donor@email.com"></div>
+    <div class="fg"><label>Password <span id="passNote" style="font-weight:400;text-transform:none;letter-spacing:0;color:rgba(255,255,255,.3)">(leave blank to keep existing)</span></label>
+      <input type="password" id="mPass" placeholder="Min 6 characters" autocomplete="new-password"></div>
+    <div class="fg" id="availField">
+      <label>Availability</label>
+      <select id="mAvail"><option value="true">✅ Available</option><option value="false">🔴 Unavailable</option></select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="donorModalCancel">Cancel</button>
+      <button class="btn-save" id="donorModalSave">Save Donor</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Delete Confirm Modal ── -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box" style="max-width:380px">
+    <div class="confirm-box">
+      <div class="ci">🗑️</div>
+      <h3>Delete Donor?</h3>
+      <p id="deleteMsg">This will permanently remove the donor from the system.</p>
+      <div class="confirm-btns">
+        <button class="btn-cancel" id="deleteCancelBtn">Cancel</button>
+        <button class="btn-confirm-del" id="deleteConfirmBtn">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+/* ══════════════════════════════════════════════
+   ADMIN PANEL SCRIPT
+══════════════════════════════════════════════ */
+const ADMIN_API = 'http://localhost:5000/api/admin';
+
+let allDonorsAdmin = [];
+let filteredDonors = [];
+let currentPage    = 1;
+const PAGE_SIZE    = 15;
+let deleteTargetId = null;
+
+/* ── Auth guard ── */
+async function checkAdminAuth() {
+  const token = localStorage.getItem('ll_token');
+  const user  = (() => { try { return JSON.parse(localStorage.getItem('ll_user')); } catch { return null; } })();
+
+  if (!token || !user) {
+    document.getElementById('accessDenied').style.display = 'block';
+    return false;
+  }
+  if (!user.isAdmin) {
+    document.getElementById('accessDenied').style.display = 'block';
+    return false;
+  }
+  document.getElementById('adminContent').style.display = 'block';
+  return true;
+}
+
+/* ── Fetch with auth ── */
+async function adminFetch(path, opts = {}) {
+  const token = localStorage.getItem('ll_token');
+  const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...(opts.headers || {}) };
+  const res  = await fetch('http://localhost:5000/api/admin' + path, { ...opts, headers });
+  const data = await res.json();
+  return { ok: res.ok, data };
+}
+
+/* ── Sidebar navigation ── */
+document.querySelectorAll('.sidebar-btn[data-sec]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-btn[data-sec]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('sec-' + btn.dataset.sec).classList.add('active');
+    if (btn.dataset.sec === 'donors') loadDonorsTable();
+  });
+});
+
+/* ── Overview Stats ── */
+async function loadStats() {
+  const { ok, data } = await adminFetch('/stats').catch(() => ({ ok:false, data:{} }));
+  if (!ok) return;
+  const s = data.stats;
+  document.getElementById('st-total').textContent   = s.total;
+  document.getElementById('st-avail').textContent   = s.available;
+  document.getElementById('st-unavail').textContent = s.unavailable;
+
+  // Blood group grid
+  const bs = document.getElementById('bloodStats');
+  bs.innerHTML = s.byBlood.map(b =>
+    `<div class="blood-item"><div class="bg-tag">${b._id}</div><div class="bg-count">${b.count} donors</div></div>`
+  ).join('');
+
+  // Top states table
+  const sb = document.getElementById('stateStatsBody');
+  sb.innerHTML = s.byState.map(st =>
+    `<tr><td class="td-name">${st._id}</td><td>${st.count}</td></tr>`
+  ).join('');
+}
+
+/* ── Donors Table ── */
+async function loadDonorsTable() {
+  const body = document.getElementById('donorTableBody');
+  body.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:rgba(255,255,255,.3)"><div class="spinner" style="margin:0 auto 10px"></div>Loading…</td></tr>';
+
+  const { ok, data } = await adminFetch('/donors').catch(() => ({ ok:false, data:{} }));
+  if (!ok) {
+    body.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:30px;color:#ef4444">Failed to load donors.</td></tr>';
+    return;
+  }
+  allDonorsAdmin = data.donors || [];
+  filteredDonors = [...allDonorsAdmin];
+  currentPage = 1;
+  renderTable();
+}
+
+function renderTable() {
+  const body  = document.getElementById('donorTableBody');
+  const meta  = document.getElementById('donorMeta');
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page  = filteredDonors.slice(start, start + PAGE_SIZE);
+  const user  = (() => { try { return JSON.parse(localStorage.getItem('ll_user')); } catch { return null; } })();
+
+  meta.textContent = `Showing ${filteredDonors.length} of ${allDonorsAdmin.length} donors`;
+
+  if (!filteredDonors.length) {
+    body.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="ei">🔍</div><p>No donors match your search.</p></div></td></tr>';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  body.innerHTML = page.map(d => {
+    const isMe = user && d._id === user._id;
+    return `
+    <tr>
+      <td>
+        <div class="td-name">${d.name}${d.isAdmin ? ' <span style="font-size:.65rem;background:rgba(220,38,38,.2);color:#ef4444;padding:2px 6px;border-radius:4px">ADMIN</span>' : ''}</div>
+        <div class="td-email">${d.email}</div>
+      </td>
+      <td><span class="blood-tag">${d.bloodGroup}</span></td>
+      <td>${d.city}, ${d.state}</td>
+      <td>+91 ${d.contact}</td>
+      <td><span class="avail-dot ${d.isAvailable?'yes':'no'}"></span>${d.isAvailable ? 'Yes' : 'No'}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-edit" data-id="${d._id}">✏️ Edit</button>
+          ${!isMe ? `<button class="btn-del" data-id="${d._id}" data-name="${d.name}">🗑️ Del</button>` : ''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Attach edit/delete handlers
+  body.querySelectorAll('.btn-edit').forEach(btn => {
+    btn.addEventListener('click', () => openEditModal(btn.dataset.id));
+  });
+  body.querySelectorAll('.btn-del').forEach(btn => {
+    btn.addEventListener('click', () => openDeleteModal(btn.dataset.id, btn.dataset.name));
+  });
+
+  renderPagination();
+}
+
+function renderPagination() {
+  const pag = document.getElementById('pagination');
+  const totalPages = Math.ceil(filteredDonors.length / PAGE_SIZE);
+  if (totalPages <= 1) { pag.innerHTML = ''; return; }
+  let html = '';
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="page-btn${i===currentPage?' active':''}" data-p="${i}">${i}</button>`;
+  }
+  pag.innerHTML = html;
+  pag.querySelectorAll('.page-btn').forEach(b => {
+    b.addEventListener('click', () => { currentPage = +b.dataset.p; renderTable(); });
+  });
+}
+
+/* ── Search ── */
+document.getElementById('donorSearch')?.addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  filteredDonors = allDonorsAdmin.filter(d =>
+    d.name.toLowerCase().includes(q)    ||
+    d.email.toLowerCase().includes(q)   ||
+    d.city.toLowerCase().includes(q)    ||
+    d.state.toLowerCase().includes(q)   ||
+    d.bloodGroup.toLowerCase().includes(q)
+  );
+  currentPage = 1;
+  renderTable();
+});
+
+/* ── Add Donor Modal ── */
+document.getElementById('addDonorBtn')?.addEventListener('click', () => {
+  openAddModal();
+});
+
+function openAddModal() {
+  document.getElementById('donorModalTitle').textContent = '＋ Add New Donor';
+  document.getElementById('editId').value = '';
+  document.getElementById('passNote').textContent = '(required for new donor)';
+  ['mName','mAge','mContact','mEmail','mPass'].forEach(id => { document.getElementById(id).value = ''; });
+  ['mGender','mBlood','mState','mAvail'].forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('mCity').innerHTML = '<option value="">Select City</option>';
+  document.getElementById('mLastDon').value = '';
+  document.getElementById('mAvail').value = 'true';
+  document.getElementById('donorModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  const d = allDonorsAdmin.find(x => x._id === id);
+  if (!d) return;
+  document.getElementById('donorModalTitle').textContent = '✏️ Edit Donor';
+  document.getElementById('editId').value  = d._id;
+  document.getElementById('mName').value   = d.name;
+  document.getElementById('mAge').value    = d.age;
+  document.getElementById('mGender').value = d.gender;
+  document.getElementById('mBlood').value  = d.bloodGroup;
+  document.getElementById('mContact').value= d.contact;
+  document.getElementById('mEmail').value  = d.email;
+  document.getElementById('mPass').value   = '';
+  document.getElementById('mLastDon').value= d.lastDonationDate ? d.lastDonationDate.split('T')[0] : '';
+  document.getElementById('mAvail').value  = d.isAvailable ? 'true' : 'false';
+  document.getElementById('passNote').textContent = '(leave blank to keep existing)';
+
+  // Set state and city dropdowns
+  const stateSel = document.getElementById('mState');
+  stateSel.value = d.state;
+  // Trigger city population
+  const event = new Event('change');
+  stateSel.dispatchEvent(event);
+  setTimeout(() => { document.getElementById('mCity').value = d.city; }, 50);
+
+  document.getElementById('donorModal').classList.add('open');
+}
+
+document.getElementById('donorModalCancel')?.addEventListener('click', () => {
+  document.getElementById('donorModal').classList.remove('open');
+});
+document.getElementById('donorModal')?.addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+
+/* ── Save Donor (Create or Update) ── */
+document.getElementById('donorModalSave')?.addEventListener('click', async () => {
+  const id      = document.getElementById('editId').value;
+  const isEdit  = !!id;
+  const saveBtn = document.getElementById('donorModalSave');
+
+  const name           = document.getElementById('mName').value.trim();
+  const age            = document.getElementById('mAge').value;
+  const gender         = document.getElementById('mGender').value;
+  const bloodGroup     = document.getElementById('mBlood').value;
+  const state          = document.getElementById('mState').value;
+  const city           = document.getElementById('mCity').value;
+  const contact        = document.getElementById('mContact').value.trim();
+  const lastDonationDate = document.getElementById('mLastDon').value;
+  const email          = document.getElementById('mEmail').value.trim();
+  const password       = document.getElementById('mPass').value;
+  const isAvailable    = document.getElementById('mAvail').value === 'true';
+
+  // Basic validation
+  if (!name || !age || !gender || !bloodGroup || !state || !city || !contact || !lastDonationDate || !email) {
+    window.showToast('Please fill all required fields.', 'error'); return;
+  }
+  if (!isEdit && !password) {
+    window.showToast('Password is required for new donor.', 'error'); return;
+  }
+
+  const body = { name, age: +age, gender, bloodGroup, state, city, contact, lastDonationDate, email, isAvailable };
+  if (password) body.password = password;
+
+  saveBtn.textContent = 'Saving…'; saveBtn.disabled = true;
+
+  const path = isEdit ? `/donors/${id}` : '/donors';
+  const method = isEdit ? 'PUT' : 'POST';
+  const { ok, data } = await adminFetch(path, { method, body: JSON.stringify(body) })
+    .catch(() => ({ ok:false, data:{ message:'Server error.' } }));
+
+  saveBtn.textContent = 'Save Donor'; saveBtn.disabled = false;
+
+  if (ok) {
+    window.showToast(data.message || (isEdit ? 'Donor updated.' : 'Donor created.'));
+    document.getElementById('donorModal').classList.remove('open');
+    loadDonorsTable();
+    loadStats();
+  } else {
+    window.showToast(data.message || 'Failed to save.', 'error');
+  }
+});
+
+/* ── Delete Modal ── */
+function openDeleteModal(id, name) {
+  deleteTargetId = id;
+  document.getElementById('deleteMsg').textContent = `This will permanently remove "${name}" from the system.`;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+document.getElementById('deleteCancelBtn')?.addEventListener('click', () => {
+  document.getElementById('deleteModal').classList.remove('open');
+  deleteTargetId = null;
+});
+document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+  if (e.target === this) { this.classList.remove('open'); deleteTargetId = null; }
+});
+
+document.getElementById('deleteConfirmBtn')?.addEventListener('click', async () => {
+  if (!deleteTargetId) return;
+  const btn = document.getElementById('deleteConfirmBtn');
+  btn.textContent = 'Deleting…'; btn.disabled = true;
+
+  const { ok, data } = await adminFetch(`/donors/${deleteTargetId}`, { method:'DELETE' })
+    .catch(() => ({ ok:false, data:{ message:'Server error.' } }));
+
+  btn.textContent = 'Yes, Delete'; btn.disabled = false;
+
+  if (ok) {
+    window.showToast(data.message || 'Donor deleted.');
+    document.getElementById('deleteModal').classList.remove('open');
+    deleteTargetId = null;
+    loadDonorsTable();
+    loadStats();
+  } else {
+    window.showToast(data.message || 'Failed to delete.', 'error');
+  }
+});
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', async () => {
+  const ok = await checkAdminAuth();
+  if (ok) {
+    loadStats();
+  }
+});
+</script>
+</body>
+</html>

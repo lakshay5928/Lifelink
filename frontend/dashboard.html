@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard — LifeLink</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="apiBar" class="api-bar">🔄 Connecting...</div>
+<div id="toast"></div>
+<nav>
+  <div class="nav-logo"><div class="pulse"></div>LifeLink</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+    <a href="emergency.html">Emergency</a><a href="dashboard.html">Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" data-modal="login">Login</button>
+    <button class="btn btn-sm" data-action="logout" style="display:none;background:var(--red-light);color:var(--red);border-radius:50px;border:none">Logout</button>
+  </div>
+  <button class="ham"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob-menu">
+  <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+  <a href="emergency.html">Emergency</a>
+</div>
+
+<div class="ph"><div class="ph-inner"><div class="ph-badge">👤 My Account</div><h1>My Dashboard</h1><p>Manage your profile, availability, and donation history.</p></div></div>
+
+<div class="dash-wrap">
+  <div class="dash-grid">
+
+    <!-- Sidebar -->
+    <div class="dash-side">
+      <div class="dash-profile">
+        <div class="dash-ava" id="dashAva">?</div>
+        <span class="dash-pname" id="dashName">Loading...</span>
+        <span class="dash-ploc" id="dashLoc">—</span>
+        <span class="blood-badge" id="dashBlood" style="font-size:.82rem;padding:3px 12px">—</span>
+      </div>
+      <div class="dash-nav">
+        <div class="dn-item active">📊 Overview</div>
+        <a href="search.html" class="dn-item" style="text-decoration:none;color:inherit">🔍 Find Donors</a>
+        <a href="emergency.html" class="dn-item" style="text-decoration:none;color:inherit">🚨 Emergency</a>
+        <div class="dn-item" data-action="logout" style="color:var(--red);cursor:pointer">🚪 Logout</div>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="dash-main">
+      <!-- Stats -->
+      <div class="dash-stats">
+        <div class="ds-card"><span class="ds-num" id="dsDays">—</span><span class="ds-lbl">Days Since Last Donation</span></div>
+        <div class="ds-card"><span class="ds-num" id="dsBlood" style="font-size:1.6rem">—</span><span class="ds-lbl">Your Blood Group</span></div>
+        <div class="ds-card"><span class="ds-num" id="dsCity" style="font-size:1.1rem;margin-top:4px">—</span><span class="ds-lbl">Your City</span></div>
+      </div>
+
+      <!-- Eligibility -->
+      <div class="dash-card">
+        <h3>Eligibility Status</h3>
+        <div class="elig-box" id="eligBanner">
+          <div class="elig-title" id="eligTitle">Loading...</div>
+          <div class="elig-detail" id="eligDetail"></div>
+        </div>
+      </div>
+
+      <!-- Availability -->
+      <div class="dash-card">
+        <h3>My Availability</h3>
+        <p style="font-size:.81rem;color:var(--muted);margin-bottom:13px">Toggle here — unavailable donors are hidden from all search results instantly.</p>
+        <div class="avail-banner yes" id="availBanner">
+          <div>
+            <span class="avail-label" id="availLabel">🟢 Currently Available</span>
+            <span class="avail-sub" id="availSub">You are visible in donor searches.</span>
+          </div>
+          <button id="availBtn" class="btn btn-sm" style="background:var(--red-dark);color:#fff;border:none;border-radius:50px;padding:8px 18px;font-weight:700;cursor:pointer;white-space:nowrap">🔴 Mark Unavailable</button>
+        </div>
+        <div class="avail-tags" style="margin-top:12px">
+          <span class="avail-tag">✈️ Travelling</span>
+          <span class="avail-tag">🤒 Unwell</span>
+          <span class="avail-tag">💉 Recently donated</span>
+          <span class="avail-tag">⏸️ Taking a break</span>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="dash-card">
+        <h3>Quick Actions</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <a href="search.html" class="btn btn-outline btn-sm">🔍 Browse Donors</a>
+          <a href="emergency.html" class="btn btn-red btn-sm">🚨 Emergency Alert</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-pane="loginPane">Login</button>
+      <button class="modal-tab" data-pane="registerPane">Register</button>
+    </div>
+    <div id="loginPane" class="modal-pane">
+      <form id="loginForm">
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+        <button type="submit" class="btn-submit">Log In</button>
+      </form>
+    </div>
+    <div id="registerPane" class="modal-pane" style="display:none;text-align:center;padding:10px 0">
+      <a href="register.html" class="btn btn-red" style="display:inline-flex">Go to Register Page →</a>
+    </div>
+  </div>
+</div>
+
+<footer style="background:linear-gradient(135deg,var(--red-dark),var(--red));color:#fff;padding:24px 5%;text-align:center"><p style="font-size:.78rem;color:rgba(255,255,255,.5)">© 2025 LifeLink</p></footer>
+<script src="js/app.js"></script>
+</body>
+</html>

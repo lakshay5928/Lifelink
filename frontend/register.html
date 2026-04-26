@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Register — LifeLink</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="apiBar" class="api-bar">🔄 Connecting...</div>
+<div id="toast"></div>
+<nav>
+  <div class="nav-logo"><div class="pulse"></div>LifeLink</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+    <a href="emergency.html">Emergency</a><a href="dashboard.html">Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" data-modal="login">Login</button>
+    <button class="btn btn-sm" data-action="logout" style="display:none;background:var(--red-light);color:var(--red);border-radius:50px;border:none">Logout</button>
+  </div>
+  <button class="ham"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob-menu">
+  <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+  <a href="emergency.html">Emergency</a><a href="dashboard.html">Dashboard</a>
+</div>
+
+<div class="ph"><div class="ph-inner"><div class="ph-badge">🩸 Join</div><h1>Register as a Donor</h1><p>Your profile helps match you with someone who needs your blood group nearby.</p></div></div>
+
+<div class="reg-wrap">
+  <div class="reg-card">
+
+    <div id="regSuccess" class="success-box" style="display:none">
+      <span class="ico">🎉</span>
+      <h3>You're Registered!</h3>
+      <p>Your donor profile is now live. You'll be contacted when someone nearby needs your blood group.</p>
+      <a href="dashboard.html" class="btn btn-red">Go to My Dashboard →</a>
+    </div>
+
+    <form id="registerForm">
+      <div class="fsec">Personal Info</div>
+      <div class="row2">
+        <div class="fg"><label>Full Name</label><input type="text" id="rName" placeholder="e.g. Arjun Sharma" required></div>
+        <div class="fg"><label>Gender</label><select id="rGender" required><option value="">Select</option><option>Male</option><option>Female</option></select></div>
+      </div>
+      <div class="row2">
+        <div class="fg"><label>Age</label><input type="number" id="rAge" placeholder="18–65" required></div>
+        <div class="fg"><label>Blood Group</label><select id="rBlood" required><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
+      </div>
+
+      <div class="fsec">Location</div>
+      <div class="row2">
+        <div class="fg"><label>State</label><select id="rState" class="state-sel" data-city-target="rCity" required><option value="">Select State</option></select></div>
+        <div class="fg"><label>City</label><select id="rCity" required disabled><option value="">Select State first</option></select></div>
+      </div>
+
+      <div class="fsec">Contact & History</div>
+      <div class="row2">
+        <div class="fg"><label>Phone Number</label><input type="tel" id="rContact" placeholder="10-digit mobile" required></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="rEmail" placeholder="you@example.com" required></div>
+      </div>
+      <div class="row2">
+        <div class="fg"><label>Last Donation Date</label><input type="date" id="rLastDon" required><span class="fhint" style="color:var(--muted)">Never donated? Enter today's date.</span></div>
+        <div class="fg"><label>Create Password</label><input type="password" id="rPass" placeholder="Min 6 characters" required></div>
+      </div>
+
+      <!-- Eligibility box -->
+      <div class="elig-box" id="eligBox">
+        <div class="elig-title">Fill in details to check eligibility</div>
+        <div class="elig-detail">Age, gender and last donation date needed.</div>
+      </div>
+
+      <button type="submit" class="btn-submit" disabled>Complete Registration</button>
+      <p style="text-align:center;margin-top:10px;font-size:.76rem;color:var(--muted)">By registering, you agree to be contacted only for genuine blood needs in your area.</p>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-pane="loginPane">Login</button>
+      <button class="modal-tab" data-pane="registerPane">Register</button>
+    </div>
+    <div id="loginPane" class="modal-pane">
+      <form id="loginForm">
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+        <button type="submit" class="btn-submit">Log In</button>
+      </form>
+    </div>
+    <div id="registerPane" class="modal-pane" style="display:none;text-align:center;padding:10px 0">
+      <a href="register.html" class="btn btn-red" style="display:inline-flex">Go to Register Page →</a>
+    </div>
+  </div>
+</div>
+<footer style="background:linear-gradient(135deg,var(--red-dark),var(--red));color:#fff;padding:24px 5%;text-align:center"><p style="font-size:.78rem;color:rgba(255,255,255,.5)">© 2025 LifeLink</p></footer>
+<script src="js/app.js"></script>
+</body>
+</html>

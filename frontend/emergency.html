@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emergency — LifeLink</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="apiBar" class="api-bar">🔄 Connecting...</div>
+<div id="toast"></div>
+<nav>
+  <div class="nav-logo"><div class="pulse"></div>LifeLink</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+    <a href="emergency.html">Emergency</a><a href="dashboard.html">Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" data-modal="login">Login</button>
+    <a href="register.html" class="btn btn-red btn-sm">+ Register</a>
+    <button class="btn btn-sm" data-action="logout" style="display:none;background:var(--red-light);color:var(--red);border-radius:50px;border:none">Logout</button>
+  </div>
+  <button class="ham"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob-menu">
+  <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+  <a href="emergency.html">Emergency</a><a href="register.html">Register</a>
+</div>
+
+<div class="ph" style="background:linear-gradient(135deg,#1a0000,#8b0000,#c1121f)">
+  <div class="ph-inner"><div class="ph-badge">🚨 Priority System</div><h1>Emergency Blood Request</h1><p>Submit an urgent request — nearest 10 eligible donors are alerted immediately via SMS.</p></div>
+</div>
+
+<div class="em-layout">
+  <div class="em-info">
+    <span class="sec-label">Urgent Help</span>
+    <h2>Nearest 10 Donors Alerted Instantly</h2>
+    <p>Our system finds the nearest eligible, available donors sorted by city-first proximity — and sends an SMS alert to top 10 simultaneously.</p>
+    <div class="em-feats">
+      <div class="em-feat"><div class="em-fi">⚡</div><div class="em-ft"><h4>SMS to Top 10 Nearest</h4><p>City donors alerted first, then state-level if needed.</p></div></div>
+      <div class="em-feat"><div class="em-fi">✅</div><div class="em-ft"><h4>Eligible & Available Only</h4><p>Only donors who can actually donate get the alert.</p></div></div>
+      <div class="em-feat"><div class="em-fi">📞</div><div class="em-ft"><h4>Direct Contact</h4><p>Call or WhatsApp each alerted donor directly from the result screen.</p></div></div>
+      <div class="em-feat"><div class="em-fi">🔒</div><div class="em-ft"><h4>Privacy First</h4><p>Contact details shared only in emergency context.</p></div></div>
+    </div>
+  </div>
+
+  <div class="em-card">
+    <h3>🚨 Send Emergency Alert</h3>
+    <p class="sub">More specific = faster match. Top 10 nearest donors will be alerted.</p>
+    <form id="emergencyForm">
+      <div class="fg"><label>Blood Group Needed *</label>
+        <select id="eBlood" required><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
+      </div>
+      <div class="row2">
+        <div class="fg"><label>State *</label><select id="eState" class="state-sel" data-city-target="eCity" required><option value="">Select</option></select></div>
+        <div class="fg"><label>City *</label><select id="eCity" required disabled><option value="">Select state first</option></select></div>
+      </div>
+      <div class="fg"><label>Hospital / Location *</label><input type="text" id="eHospital" placeholder="e.g. AIIMS Delhi, Fortis Bangalore" required></div>
+      <div class="fg">
+        <label>Priority</label>
+        <div class="priority-row">
+          <div class="pri-opt"><input type="radio" name="priority" id="pNormal" value="Normal"><label for="pNormal" class="pri-lbl">Normal</label></div>
+          <div class="pri-opt"><input type="radio" name="priority" id="pHigh" value="High"><label for="pHigh" class="pri-lbl">High</label></div>
+          <div class="pri-opt"><input type="radio" name="priority" id="pCrit" value="Critical" checked><label for="pCrit" class="pri-lbl">🚨 Critical</label></div>
+        </div>
+      </div>
+      <div class="fg"><label>Your Contact *</label><input type="tel" id="eContact" placeholder="10-digit mobile" required></div>
+      <div class="fg"><label>Message (optional)</label><textarea id="eMsg" rows="2" placeholder="Units needed, patient condition..." style="resize:vertical"></textarea></div>
+      <button type="submit" class="btn-submit">🚨 Send Emergency Alert to Nearest 10</button>
+    </form>
+
+    <div class="alert-result" id="alertResult">
+      <span class="ar-icon"></span>
+      <div class="ar-title"></div>
+      <div class="ar-sub"></div>
+      <div class="sms-list" style="margin-top:10px"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-pane="loginPane">Login</button>
+      <button class="modal-tab" data-pane="registerPane">Register</button>
+    </div>
+    <div id="loginPane" class="modal-pane">
+      <form id="loginForm">
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+        <button type="submit" class="btn-submit">Log In</button>
+      </form>
+    </div>
+    <div id="registerPane" class="modal-pane" style="display:none;text-align:center;padding:10px 0">
+      <a href="register.html" class="btn btn-red" style="display:inline-flex">Go to Register Page →</a>
+    </div>
+  </div>
+</div>
+<footer style="background:linear-gradient(135deg,var(--red-dark),var(--red));color:#fff;padding:24px 5%;text-align:center;margin-top:60px"><p style="font-size:.78rem;color:rgba(255,255,255,.5)">© 2025 LifeLink</p></footer>
+<script src="js/app.js"></script>
+</body>
+</html>

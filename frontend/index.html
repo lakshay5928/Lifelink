@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LifeLink — Blood Donor Network</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="apiBar" class="api-bar">🔄 Connecting to server...</div>
+<div id="toast"></div>
+
+<nav>
+  <div class="nav-logo"><div class="pulse"></div>LifeLink</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="search.html">Find Donors</a>
+    <a href="emergency.html">Emergency</a>
+    <a href="dashboard.html">Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" data-modal="login">Login</button>
+    <a href="register.html" class="btn btn-red btn-sm">+ Register</a>
+    <button class="btn btn-sm" data-action="logout" style="display:none;background:var(--red-light);color:var(--red);border-radius:50px;border:none">Logout</button>
+  </div>
+  <button class="ham"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob-menu">
+  <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+  <a href="emergency.html">Emergency</a><a href="dashboard.html">Dashboard</a>
+  <a href="register.html" id="mobRegisterLink">Register</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb a"></div><div class="hero-orb b"></div>
+  <div class="hero-grid">
+    <div>
+      <div class="hero-badge"><span class="ldot"></span>Live Donor Network</div>
+      <h1>Connect Donors<br>in <em>Real Emergencies</em></h1>
+      <p class="hero-sub">When a hospital needs blood urgently, every minute matters. LifeLink connects patients with verified local donors — quickly and at no cost.</p>
+      <div class="hero-btns">
+        <a href="register.html" class="btn btn-red">🩸 Register as Donor</a>
+        <a href="search.html" class="btn btn-ghost">Find Donors →</a>
+      </div>
+      <div class="hero-pills">
+        <span class="pill">A+</span><span class="pill">A-</span><span class="pill">B+</span><span class="pill">B-</span>
+        <span class="pill">O+</span><span class="pill">O-</span><span class="pill">AB+</span><span class="pill">AB-</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <span class="drop">🩸</span>
+        <h3>Every Drop Counts</h3>
+        <p>One donation can save up to three lives</p>
+        <div class="blood-pills">
+          <span class="pill">A+</span><span class="pill">A-</span><span class="pill">B+</span><span class="pill">B-</span>
+          <span class="pill">O+</span><span class="pill">O-</span><span class="pill">AB+</span><span class="pill">AB-</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hs"><span class="hs-n">200+</span><span class="hs-l">Donors</span></div>
+        <div class="hs"><span class="hs-n">98%</span><span class="hs-l">Match Rate</span></div>
+        <div class="hs"><span class="hs-n">24/7</span><span class="hs-l">Emergency</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec bg-off">
+  <div class="sec-inner">
+    <div class="sec-hdr center">
+      <span class="sec-label">Why LifeLink</span>
+      <h2 class="sec-title">Built for Real Emergencies</h2>
+      <p class="sec-sub">Every detail designed for when time is short and stakes are high.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="fi">🔍</div><h3>Blood Group Filter</h3><p>Instantly filter by blood type across all 8 groups. Find exact matches in seconds.</p></div>
+      <div class="feat-card"><div class="fi">📍</div><h3>Location Matching</h3><p>Filter by state and city. Emergency alerts go to nearest 10 donors first.</p></div>
+      <div class="feat-card"><div class="fi">✅</div><h3>Auto Eligibility Check</h3><p>90-day rule for males, 120-day for females. Ineligible donors never show up.</p></div>
+      <div class="feat-card"><div class="fi">🔄</div><h3>Availability Control</h3><p>Donors toggle their own availability from dashboard. Unavailable = hidden from search.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="sec-hdr center">
+      <span class="sec-label">Process</span>
+      <h2 class="sec-title">How It Works</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><h3>Register</h3><p>Create profile with blood group, location, last donation. Takes 2 minutes.</p></div>
+      <div class="step"><div class="step-n">2</div><h3>Search</h3><p>Patients or hospitals filter donors by blood group and city instantly.</p></div>
+      <div class="step"><div class="step-n">3</div><h3>Emergency Alert</h3><p>System finds nearest 10 eligible donors and sends SMS alert to all.</p></div>
+      <div class="step"><div class="step-n">4</div><h3>Donate</h3><p>Donor reaches hospital. Life saved.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="sec bg-dark">
+  <div class="sec-inner">
+    <div class="stats-grid">
+      <div class="stat"><span class="stat-n" data-count="200" data-suffix="+">0</span><span class="stat-l">Registered Donors</span></div>
+      <div class="stat"><span class="stat-n" data-count="98" data-suffix="%">0</span><span class="stat-l">Match Rate</span></div>
+      <div class="stat"><span class="stat-n" data-count="10">0</span><span class="stat-l">Nearest Donors Alerted</span></div>
+      <div class="stat"><span class="stat-n" style="font-size:3rem">24/7</span><span class="stat-l">Emergency Access</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="sec bg-off">
+  <div class="sec-inner">
+    <div class="sec-hdr center"><span class="sec-label">Stories</span><h2 class="sec-title">Real People, Real Emergencies</h2></div>
+    <div class="t-grid">
+      <div class="t-card"><div class="t-q">&ldquo;</div><p class="t-text">My father needed O- blood during surgery. Within 40 minutes we found two donors nearby. LifeLink saved his life.</p><div class="t-auth"><div class="t-ava">RS</div><div><span class="t-name">Rohit Saxena</span><span class="t-info">Donor since 2023 · Lucknow</span></div></div></div>
+      <div class="t-card"><div class="t-q">&ldquo;</div><p class="t-text">The eligibility check is what makes this different. It tells me exactly when I can donate next. No guessing.</p><div class="t-auth"><div class="t-ava">AP</div><div><span class="t-name">Ananya Pillai</span><span class="t-info">Donor · Kochi</span></div></div></div>
+      <div class="t-card"><div class="t-q">&ldquo;</div><p class="t-text">Emergency SMS reached me in minutes. I reached the hospital within an hour. The system works exactly as promised.</p><div class="t-auth"><div class="t-ava">VK</div><div><span class="t-name">Vishal Kundra</span><span class="t-info">Donor · Pune</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand"><div class="nav-logo" style="color:#fff"><div class="pulse"></div>LifeLink</div><p>Connecting blood donors with patients across India — 24 hours a day.</p></div>
+    <div class="foot-col"><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="register.html">Register</a></li><li><a href="search.html">Find Donors</a></li><li><a href="emergency.html">Emergency</a></li><li><a href="dashboard.html">Dashboard</a></li></ul></div>
+    <div class="foot-col"><h4>Support</h4><ul><li><a href="#">How It Works</a></li><li><a href="#">Eligibility Guide</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="foot-col"><h4>Updates</h4><p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-bottom:10px">Get alerts when donors register near you.</p><div class="foot-sub"><input type="email" placeholder="your@email.com"><button>Go</button></div></div>
+  </div>
+  <div class="foot-bottom"><p>© 2025 LifeLink. Built to save lives.</p><div class="foot-links"><a href="#">Privacy</a><a href="#">Terms</a></div></div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-pane="loginPane">Login</button>
+      <button class="modal-tab" data-pane="registerPane">Register</button>
+    </div>
+    <!-- Login -->
+    <div id="loginPane" class="modal-pane">
+      <form id="loginForm">
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+        <button type="submit" class="btn-submit">Log In</button>
+        <p style="text-align:center;margin-top:12px;font-size:.8rem;color:var(--muted)">New here? <a href="register.html" style="color:var(--red);font-weight:600">Register as donor →</a></p>
+      </form>
+    </div>
+    <!-- Register redirect -->
+    <div id="registerPane" class="modal-pane" style="display:none;text-align:center;padding:10px 0">
+      <p style="color:var(--muted);font-size:.9rem;margin-bottom:16px">Full registration form with eligibility check</p>
+      <a href="register.html" class="btn btn-red" style="display:inline-flex">Go to Register Page →</a>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

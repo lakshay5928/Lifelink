@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Find Donors — LifeLink</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="apiBar" class="api-bar">🔄 Connecting...</div>
+<div id="toast"></div>
+<nav>
+  <div class="nav-logo"><div class="pulse"></div>LifeLink</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+    <a href="emergency.html">Emergency</a><a href="dashboard.html">Dashboard</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn btn-outline btn-sm" data-modal="login">Login</button>
+    <a href="register.html" class="btn btn-red btn-sm">+ Register</a>
+    <button class="btn btn-sm" data-action="logout" style="display:none;background:var(--red-light);color:var(--red);border-radius:50px;border:none">Logout</button>
+  </div>
+  <button class="ham"><span></span><span></span><span></span></button>
+</nav>
+<div class="mob-menu">
+  <a href="index.html">Home</a><a href="search.html">Find Donors</a>
+  <a href="emergency.html">Emergency</a><a href="register.html">Register</a>
+</div>
+
+<div class="ph"><div class="ph-inner"><div class="ph-badge">🔍 Live Database</div><h1>Find Blood Donors</h1><p>Search 200+ verified donors by blood group, state, and city. Results update instantly.</p></div></div>
+
+<div class="search-wrap">
+  <div class="filter-card">
+    <div class="filter-top">
+      <h3>🎯 Filter Donors</h3>
+      <button id="resetFilters" class="btn btn-outline btn-sm">Reset</button>
+    </div>
+    <div class="filter-row">
+      <div class="fg" style="margin:0">
+        <label style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;display:block;margin-bottom:5px">Blood Group</label>
+        <select id="fBlood" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;outline:none">
+          <option value="">All Types</option>
+          <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+          <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+        </select>
+      </div>
+      <div class="fg" style="margin:0">
+        <label style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;display:block;margin-bottom:5px">State</label>
+        <select id="fState" class="state-sel" data-city-target="fCity" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;outline:none">
+          <option value="">All States</option>
+        </select>
+      </div>
+      <div class="fg" style="margin:0">
+        <label style="font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;display:block;margin-bottom:5px">City</label>
+        <select id="fCity" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:.88rem;outline:none">
+          <option value="">All Cities</option>
+        </select>
+      </div>
+      <div class="toggle-wrap">
+        <span class="tog-lbl">Eligible Only</span>
+        <div class="tog-row">
+          <label class="tog"><input type="checkbox" id="fElig" checked><span class="tog-track"></span></label>
+          <span style="font-size:.8rem;color:var(--muted)">On</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-meta" id="resultsMeta" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+    <p>Loading donors...</p>
+    <a href="emergency.html" class="btn btn-red btn-sm">🚨 Emergency</a>
+  </div>
+
+  <div class="donors-grid" id="donorsGrid">
+    <div class="loading"><div class="spinner"></div><p style="color:var(--muted);font-size:.85rem">Loading donors...</p></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close">✕</button>
+    <div class="modal-tabs">
+      <button class="modal-tab active" data-pane="loginPane">Login</button>
+      <button class="modal-tab" data-pane="registerPane">Register</button>
+    </div>
+    <div id="loginPane" class="modal-pane">
+      <form id="loginForm">
+        <div class="fg"><label>Email</label><input type="email" name="email" placeholder="you@example.com" required></div>
+        <div class="fg"><label>Password</label><input type="password" name="password" placeholder="Your password" required></div>
+        <button type="submit" class="btn-submit">Log In</button>
+      </form>
+    </div>
+    <div id="registerPane" class="modal-pane" style="display:none;text-align:center;padding:10px 0">
+      <a href="register.html" class="btn btn-red" style="display:inline-flex">Go to Register Page →</a>
+    </div>
+  </div>
+</div>
+<footer style="background:linear-gradient(135deg,var(--red-dark),var(--red));color:#fff;padding:24px 5%;text-align:center"><p style="font-size:.78rem;color:rgba(255,255,255,.5)">© 2025 LifeLink</p></footer>
+<script src="js/app.js"></script>
+</body>
+</html>
